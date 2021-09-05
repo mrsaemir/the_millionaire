@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=the_millionaire
+POSTGRES_USER=nIpMzKLdIazztiMvulLYEVdtoBnXBfCP
+POSTGRES_PASSWORD=0SeyRQIgptSKrDFUj9EgC3QQbi8w2jNfQRRI9BoqBJbKoho5Xf3clWElXYi6x7lv
