@@ -7,3 +7,7 @@ class QuestionManager(models.Manager):
             'answer'
         )
 
+    def published(self):
+        return self.exclude(answer__eq=None)
+
+
