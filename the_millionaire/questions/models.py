@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from .managers import QuestionManager
-from typing import Union
+from typing import Union, Tuple
 
 User = get_user_model()
 
@@ -88,7 +88,7 @@ class UserQuestionSession(models.Model):
 
         return question.id in self.answers
 
-    def set_answer(self, question, answer) -> Union[None, (bool, QuestionOption)]:
+    def set_answer(self, question, answer) -> Union[None, Tuple[bool, QuestionOption]]:
         """
         Sets user answer for a specific question.
         this function will either return None or a tuple.
