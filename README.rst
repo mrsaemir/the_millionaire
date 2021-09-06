@@ -48,4 +48,10 @@ Some useful curl commands
 
     $  curl -d '{"username":"user1", "password": "passsword"}' -H "Content-Type: application/json" -X POST http://127.0.0.1:8000/auth-token/
 
+
+* Top Users::
+
+    $  curl -H "Content-Type: application/json" -X GET http://127.0.0.1:8000/api/questions/top-users/
+
+
 * Other apis are in postman
