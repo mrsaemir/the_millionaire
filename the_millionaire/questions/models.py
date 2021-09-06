@@ -38,10 +38,11 @@ class Question(models.Model):
                 _("Answer of a question should be one of it's options.")
             )
 
-        if not self.answer and self.user_questions.exists(): # noqa
-            raise ValidationError(
-                _("Can't unset answer because this question is being used by some users.")
-            )
+        if self.id:
+            if not self.answer and self.user_questions.exists(): # noqa
+                raise ValidationError(
+                    _("Can't unset answer because this question is being used by some users.")
+                )
 
         return super(Question, self).save(*args, **kwargs)
 

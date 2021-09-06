@@ -32,7 +32,7 @@ class UserQuestionSessionsView(
     def create(self, request, *args, **kwargs):
         session = create_question_session(user=request.user)
         return Response(
-            UserQuestionSessionDetailSerializer(session, context={'sessions': session}).data,
+            UserQuestionSessionDetailSerializer(session, context={'session': session}).data,
         )
 
     def retrieve(self, request, *args, **kwargs):
@@ -53,10 +53,10 @@ class UserQuestionSessionsView(
 
         return Response(
             {
-                "session": UserQuestionSessionDetailSerializer(obj).data,
+                "session": UserQuestionSessionDetailSerializer(obj, context={'session': obj}).data,
                 "answer": {
                     "status": result[0],
-                    "answer": QuestionOptionSerializer(result[1]).data
+                    "answer": result[1].id
                 }
             }
         )
