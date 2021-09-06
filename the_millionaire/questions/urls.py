@@ -1,8 +1,9 @@
-from django.urls import path
-from .views import CreateUserQuestionSessionView, ListUserQuestionSessionsView
 
+from .views import UserQuestionSessionsView
+from rest_framework.routers import DefaultRouter
 
-urlpatterns = [
-    path('', ListUserQuestionSessionsView.as_view(), name='list-user-question-sessions'),
-    path('new-session', CreateUserQuestionSessionView.as_view(), name='create-user-question-session'),
-]
+router = DefaultRouter()
+
+router.register(
+    'session', UserQuestionSessionsView, basename='question-session'
+)

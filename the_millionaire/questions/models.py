@@ -73,7 +73,7 @@ class UserQuestionSession(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     questions = models.ManyToManyField(Question, related_name='user_questions')
-    answers = models.JSONField(default=dict)
+    answers = models.JSONField(default=list)
     score = models.PositiveIntegerField(default=0)
 
     # an indicator that shows if a question session is closed.
@@ -86,7 +86,10 @@ class UserQuestionSession(models.Model):
         Checking if a user has answered a specific question.
         """
 
-        return question.id in self.answers
+        for answer in self.answers:
+            if answer['question_id'] == question.id:
+                return True
+        return False
 
     def set_answer(self, question, answer) -> Union[None, Tuple[bool, QuestionOption]]:
         """
@@ -105,10 +108,20 @@ class UserQuestionSession(models.Model):
             # returns none meaning that the answer is not submitted.
             return None
 
-        if answer not in question.answers.all():
+        if answer not in question.options.all():
             # the answer is not an option of the question
             return None
 
-        answer[question.id] = answer.id
-        return question.answer == answer, question.answer
+        self.answers.append({
+            "question_id": question.id,
+            "answer_id": answer.id
+        })
+
+        is_answered_correct = question.answer == answer
+        if is_answered_correct:
+            self.score += question.score
+
+        self.save()
+
+        return is_answered_correct, question.answer
 

@@ -1,47 +1,63 @@
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, ListAPIView
+from rest_framework.decorators import action
+from rest_framework.viewsets import ModelViewSet
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import UserQuestionSession
 from .utils import create_question_session
-from .serializers import UserQuestionSessionSerializer
+
+from .serializers import (
+    UserQuestionSessionDetailSerializer,
+    UserQuestionSessionListSerializer,
+    QuestionOptionSerializer,
+    SetAnswerSerializer
+)
 
 
-class CreateUserQuestionSessionView(
-    CreateAPIView
+class UserQuestionSessionsView(
+    ModelViewSet
 ):
 
     permission_classes = (
         IsAuthenticated,
     )
+
+    serializer_class = UserQuestionSessionListSerializer
+
+    def get_queryset(self):
+        return UserQuestionSession.objects.filter(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        if UserQuestionSession.objects.filter(user=request.user).exists():
-            return Response(
-                {
-                    "error": _("Another user question session is in progress."),
-                },
-                status=status.HTTP_403_FORBIDDEN
-            )
-
         session = create_question_session(user=request.user)
-        return Response(UserQuestionSessionSerializer(session).data, status=status.HTTP_200_OK)
+        return Response(
+            UserQuestionSessionDetailSerializer(session, context={'sessions': session}).data,
+        )
 
+    def retrieve(self, request, *args, **kwargs):
+        obj = self.get_object()
+        return Response(
+            UserQuestionSessionDetailSerializer(obj, context={'session': obj}).data
+        )
 
-class ListUserQuestionSessionsView(
-    ListAPIView
-):
+    @action(detail=True, methods=['post'], url_path='set-answer')
+    def set_answer(self, request, pk=None):
+        obj = self.get_object()
+        serializer = SetAnswerSerializer(data=request.data, context={'session': obj})
+        serializer.is_valid(raise_exception=True)
+        result = serializer.save()
 
-    permission_classes = (
-        IsAuthenticated,
-    )
-
-    def list(self, request, *args, **kwargs):
-        sessions = UserQuestionSession.objects.filter(user=request.user)
+        if not result:
+            return Response({"error": _("Failed to submit your answer.")})
 
         return Response(
-            UserQuestionSessionSerializer(sessions, many=True).data
+            {
+                "session": UserQuestionSessionDetailSerializer(obj).data,
+                "answer": {
+                    "status": result[0],
+                    "answer": QuestionOptionSerializer(result[1]).data
+                }
+            }
         )
