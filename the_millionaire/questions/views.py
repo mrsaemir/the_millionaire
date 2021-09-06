@@ -1,6 +1,8 @@
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth import get_user_model
+from django.db import models
 from rest_framework.decorators import action
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -11,8 +13,11 @@ from .utils import create_question_session
 from .serializers import (
     UserQuestionSessionDetailSerializer,
     UserQuestionSessionListSerializer,
-    SetAnswerSerializer
+    SetAnswerSerializer,
+    TopUserSerializer
 )
+
+User = get_user_model()
 
 
 class UserQuestionSessionsView(
@@ -59,3 +64,18 @@ class UserQuestionSessionsView(
                 }
             }
         )
+
+
+class TopUsers(ReadOnlyModelViewSet):
+    serializer_class = TopUserSerializer
+    permission_classes = []
+
+    def get_queryset(self):
+        return User.objects.all().annotate(
+            score=models.Sum('userquestionsession__score')
+        ).exclude(
+            score=None
+        ).order_by(
+            '-score'
+        )[:10]
+

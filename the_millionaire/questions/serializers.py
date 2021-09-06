@@ -37,3 +37,7 @@ class SetAnswerSerializer(serializers.Serializer):
     def save(self, **kwargs):
         return self.context['session'].set_answer(**self.validated_data)
 
+
+class TopUserSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    score = serializers.IntegerField()
