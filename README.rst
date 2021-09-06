@@ -34,3 +34,18 @@ Setting Up Your Users
     $ python manage.py createsuperuser
 
 
+Some useful curl commands
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* A postman collection exists in the source code.
+* You can also use curl to test some functionalities.
+
+* Create a user::
+
+    $  curl -d '{"username":"user1", "password": "passsword", "name": "Name1"}' -H "Content-Type: application/json" -X POST http://127.0.0.1:8000/api/users/users/
+
+* Get Token::
+
+    $  curl -d '{"username":"user1", "password": "passsword"}' -H "Content-Type: application/json" -X POST http://127.0.0.1:8000/auth-token/
+
+* Other apis are in postman
