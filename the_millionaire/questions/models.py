@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from .managers import QuestionManager
+from typing import Union
 
 User = get_user_model()
 
@@ -11,7 +12,7 @@ User = get_user_model()
 class Question(models.Model):
     """
     Question model and it's corresponding score.
-    A question may multiple options and answers.
+    A question may multiple options, but it only has one answer.
     """
 
     title = models.CharField(max_length=200)
@@ -72,11 +73,42 @@ class UserQuestionSession(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     questions = models.ManyToManyField(Question, related_name='user_questions')
-    answers = models.JSONField()
+    answers = models.JSONField(default=dict)
     score = models.PositiveIntegerField(default=0)
 
-    def set_answer(self, question, answer):
+    # an indicator that shows if a question session is closed.
+    # when a session is closed, the user will not be able to submit any answers
+    # or to do any other change.
+    is_closed = models.BooleanField(default=False)
+
+    def has_answered(self, question):
+        """
+        Checking if a user has answered a specific question.
+        """
+
+        return question.id in self.answers
+
+    def set_answer(self, question, answer) -> Union[None, (bool, QuestionOption)]:
         """
         Sets user answer for a specific question.
+        this function will either return None or a tuple.
+
+        returning None means that the user answer is not submitted either because it is invalid or the
+        user has answer it before.
+
+        returning a tuple means that the answer is submitted.
+        the first element of the tuple is a boolean that shows if the submitted answer is the answer to the question.
+
+        the second element is always the answer of the question.
         """
-        raise NotImplementedError()
+        if self.has_answered(question):
+            # returns none meaning that the answer is not submitted.
+            return None
+
+        if answer not in question.answers.all():
+            # the answer is not an option of the question
+            return None
+
+        answer[question.id] = answer.id
+        return question.answer == answer, question.answer
+

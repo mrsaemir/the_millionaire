@@ -295,3 +295,6 @@ REST_FRAMEWORK = {
 CORS_URLS_REGEX = r"^/api/.*$"
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+
+NUMBER_OF_QUESTIONS = env.int('NUMBER_OF_QUESTIONS', 5)

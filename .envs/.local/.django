@@ -2,3 +2,4 @@
 # ------------------------------------------------------------------------------
 USE_DOCKER=yes
 IPYTHONDIR=/app/.ipython
+NUMBER_OF_QUESTIONS=5

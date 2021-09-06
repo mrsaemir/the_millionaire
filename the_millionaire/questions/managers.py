@@ -8,6 +8,6 @@ class QuestionManager(models.Manager):
         )
 
     def published(self):
-        return self.exclude(answer__eq=None)
+        return self.exclude(answer=None)
 
 

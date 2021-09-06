@@ -331,5 +331,3 @@ the_millionaire/media/
 
 .ipython/
 .env
-.envs/*
-!.envs/.local/
