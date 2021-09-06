@@ -11,7 +11,6 @@ from .utils import create_question_session
 from .serializers import (
     UserQuestionSessionDetailSerializer,
     UserQuestionSessionListSerializer,
-    QuestionOptionSerializer,
     SetAnswerSerializer
 )
 
