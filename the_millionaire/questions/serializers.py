@@ -39,5 +39,5 @@ class SetAnswerSerializer(serializers.Serializer):
 
 
 class TopUserSerializer(serializers.Serializer):
-    username = serializers.CharField()
+    name = serializers.CharField()
     score = serializers.IntegerField()
