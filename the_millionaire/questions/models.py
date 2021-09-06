@@ -76,11 +76,6 @@ class UserQuestionSession(models.Model):
     answers = models.JSONField(default=list)
     score = models.PositiveIntegerField(default=0)
 
-    # an indicator that shows if a question session is closed.
-    # when a session is closed, the user will not be able to submit any answers
-    # or to do any other change.
-    is_closed = models.BooleanField(default=False)
-
     def has_answered(self, question):
         """
         Checking if a user has answered a specific question.

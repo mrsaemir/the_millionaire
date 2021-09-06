@@ -23,7 +23,6 @@ class QuestionSerializer(serializers.Serializer):
 class UserQuestionSessionListSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     score = serializers.IntegerField()
-    is_closed = serializers.BooleanField()
 
 
 class UserQuestionSessionDetailSerializer(UserQuestionSessionListSerializer):
