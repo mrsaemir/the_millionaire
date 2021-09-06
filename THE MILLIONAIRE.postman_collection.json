@@ -6,13 +6,42 @@
 	},
 	"item": [
 		{
+			"name": "CREATE USER",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"mrsaemir4\",\n    \"name\": \"Amirhossein\",\n    \"password\": \"adminadmin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/users/users/",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GET TOKEN",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"adminadmin\"\n}",
+					"raw": "{\n    \"username\": \"mrsaemir4\",\n    \"password\": \"adminadmin\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
